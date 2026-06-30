@@ -1,0 +1,16 @@
+{
+  "name": "Presupuesto de Viaje",
+  "short_name": "Viaje",
+  "description": "Presupuesto diario dinámico para tu viaje, sin conexión.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F5F2",
+  "theme_color": "#F5F5F2",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,423 @@
+/* ============================================================
+   Travel Budget App — estilos
+   ============================================================ */
+
+:root {
+  /* Semánticos: verde (en rango) / ámbar / rojo (excedido) */
+  --green-text: #0F6E56;  --green-bg: #E1F5EE;  --green-border: #5DCAA5;
+  --amber-text: #854F0B;  --amber-bg: #FAEEDA;  --amber-border: #EF9F27;
+  --red-text:   #A32D2D;  --red-bg:   #FCEBEB;  --red-border:   #F09595;
+
+  /* Superficies y texto */
+  --page: #F5F5F2;
+  --surface: #FFFFFF;
+  --text: #1A1A18;
+  --text-2: #6B6A64;
+  --muted: #9E9D96;
+
+  --primary: #0F6E56;
+
+  /* Rellenos de barra de progreso */
+  --fill-ok: #1FA97D;
+  --fill-warn: #EF9F27;
+  --fill-danger: #D9453F;
+  --track: #ECECE8;
+
+  --radius-card: 12px;
+  --radius-sm: 8px;
+  --tabbar-h: 56px;
+  --maxw: 480px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--page);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.4;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+[hidden] { display: none !important; }
+
+#app {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ---- Pantallas ---- */
+.screen { padding: 20px 16px; }
+.screen.tabbed { padding-bottom: calc(var(--tabbar-h) + 24px + env(safe-area-inset-bottom, 0px)); }
+#today.tabbed { padding-bottom: calc(var(--tabbar-h) + 96px + env(safe-area-inset-bottom, 0px)); } /* deja sitio al botón sticky */
+
+.screen-header { margin-bottom: 16px; }
+.screen-title { font-size: 24px; font-weight: 600; margin: 0; }
+.subheader { color: var(--text-2); font-size: 15px; margin: 0; }
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin: 22px 0 10px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  border: 1px solid #ECECE6;
+}
+
+.empty-msg { color: var(--muted); font-size: 14px; text-align: center; padding: 14px 0; margin: 0; }
+
+/* ============================================================
+   Formularios
+   ============================================================ */
+.trip-form { display: flex; flex-direction: column; gap: 14px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 14px; font-weight: 500; color: var(--text-2); }
+
+.field input,
+.field select {
+  width: 100%;
+  font-size: 16px; /* evita zoom en iOS */
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid #D9D9D2;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  appearance: none;
+}
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15, 110, 86, 0.12);
+}
+
+.field-error { color: var(--red-text); font-size: 13px; min-height: 0; }
+.field-error:empty { display: none; }
+
+/* Chips de descripciones recientes (agregar gasto) */
+.suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: -4px; }
+.suggestions-label { font-size: 11px; color: var(--muted); margin-right: 2px; }
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--page);
+  border: 1px solid #E0E0DA;
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+}
+.chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-amount { font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.chip:active { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+.chip:active .chip-amount { color: var(--green-text); }
+
+/* Chip destacado "repetir último" */
+.chip-repeat { background: var(--primary); border-color: var(--primary); color: #fff; }
+.chip-repeat .chip-amount { color: rgba(255, 255, 255, .85); }
+.chip-repeat:active { background: #0c5a46; border-color: #0c5a46; color: #fff; }
+.chip-repeat:active .chip-amount { color: rgba(255, 255, 255, .85); }
+.chip-icon { font-size: 14px; line-height: 1; }
+
+/* En pantallas muy chicas, prioriza el nombre y oculta el monto del chip */
+@media (max-width: 360px) {
+  .chip-amount { display: none; }
+}
+
+.form-message { font-size: 14px; margin: 4px 0 0; padding: 10px 12px; border-radius: var(--radius-sm); }
+.form-message.error { color: var(--red-text); background: var(--red-bg); border: 1px solid var(--red-border); }
+.form-message.success { color: var(--green-text); background: var(--green-bg); border: 1px solid var(--green-border); }
+
+/* ============================================================
+   Botones
+   ============================================================ */
+.btn {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  padding: 13px 18px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: opacity .15s ease, background .15s ease;
+}
+.btn:active { opacity: .85; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-block { width: 100%; display: block; }
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--surface); color: var(--text); border-color: #D9D9D2; }
+.btn-danger { background: var(--red-text); color: #fff; }
+
+/* ============================================================
+   Onboarding
+   ============================================================ */
+#onboarding { padding-top: 36px; }
+.onboarding-inner { max-width: var(--maxw); }
+.onboarding-title { font-size: 28px; font-weight: 600; margin: 0 0 6px; }
+.onboarding-subtitle { color: var(--text-2); margin: 0 0 22px; }
+#onboarding-form .btn-primary { margin-top: 8px; }
+
+/* ============================================================
+   Pantalla HOY — hero
+   ============================================================ */
+.hero-state {
+  background: var(--surface);
+  border: 1px solid #ECECE6;
+  border-radius: var(--radius-card);
+  padding: 40px 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.hero {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  border: 1px solid #ECECE6;
+  padding: 26px 18px 18px;
+}
+.alert { border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; font-weight: 500; margin: 0 0 12px; text-align: center; }
+.alert-danger { color: var(--red-text); background: var(--red-bg); border: 1px solid var(--red-border); }
+
+/* Anillo de presupuesto (donut SVG) */
+.ring-wrap { display: flex; justify-content: center; padding: 4px 0 16px; }
+.ring-svg { width: 62vw; max-width: 210px; height: auto; overflow: visible; }
+.ring-track { stroke: var(--track); }
+.ring-progress {
+  stroke: var(--fill-ok);
+  transition: stroke-dashoffset .5s ease, stroke .3s ease;
+}
+.ring-progress.ok { stroke: var(--fill-ok); }
+.ring-progress.warn { stroke: var(--fill-warn); }
+.ring-progress.danger { stroke: var(--fill-danger); }
+.ring-label { fill: var(--text-2); font-size: 9px; letter-spacing: .3px; font-family: system-ui, sans-serif; }
+.ring-amount { fill: var(--text); font-size: 27px; font-weight: 500; font-family: system-ui, sans-serif; }
+.ring-spent { fill: var(--muted); font-size: 9.5px; font-family: system-ui, sans-serif; }
+
+/* Tarjeta de saldo acumulado */
+.balance-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: var(--radius-card);
+  border: 1px solid;
+  padding: 11px 14px;
+}
+.balance-card.positive { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+.balance-card.negative { background: var(--red-bg);   border-color: var(--red-border);   color: var(--red-text); }
+.balance-label { font-size: 10px; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 2px; opacity: .85; }
+.balance-amount { font-size: 21px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.balance-icon { font-size: 15px; }
+
+/* ============================================================
+   Listas de gastos
+   ============================================================ */
+.expense-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.expense-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid #ECECE6;
+  border-radius: var(--radius-sm);
+  padding: 12px 12px;
+}
+.expense-name { flex: 1; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.expense-amount { font-variant-numeric: tabular-nums; font-weight: 500; }
+.expense-edit,
+.expense-delete {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.expense-edit:active { background: var(--green-bg); color: var(--green-text); }
+.expense-delete:active { background: var(--red-bg); color: var(--red-text); }
+
+/* ============================================================
+   Botón sticky (Agregar gasto)
+   ============================================================ */
+.sticky-action {
+  position: fixed;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--maxw);
+  padding: 12px 16px;
+  background: linear-gradient(to top, var(--page) 70%, rgba(245,245,242,0));
+  z-index: 30;
+}
+
+/* ============================================================
+   Tab bar
+   ============================================================ */
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--maxw);
+  min-height: var(--tabbar-h);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid #E4E4DE;
+  z-index: 40;
+}
+.tab {
+  flex: 1;
+  min-height: var(--tabbar-h);
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tab.active { color: var(--primary); font-weight: 600; }
+
+/* ============================================================
+   Historial — accordion
+   ============================================================ */
+.day-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.day-item {
+  background: var(--surface);
+  border: 1px solid #ECECE6;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.day-item.future { opacity: .6; }
+
+.day-header {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 14px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "title meta" "badge badge";
+  gap: 6px 10px;
+  align-items: center;
+}
+.day-header:disabled { cursor: default; }
+.day-title { grid-area: title; font-size: 15px; font-weight: 600; }
+.day-meta { grid-area: meta; text-align: right; font-size: 13px; color: var(--text-2); display: flex; flex-direction: column; }
+.day-spent { font-weight: 600; color: var(--text); }
+.day-pending { grid-area: meta; justify-self: end; font-size: 13px; color: var(--muted); font-style: italic; }
+.badge {
+  grid-area: badge;
+  justify-self: start;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.badge-ok { color: var(--green-text); background: var(--green-bg); border: 1px solid var(--green-border); }
+.badge-danger { color: var(--red-text); background: var(--red-bg); border: 1px solid var(--red-border); }
+.badge-neutral { color: var(--muted); background: #F0F0EC; border: 1px solid #E0E0DA; }
+
+.day-body { display: none; padding: 0 14px 14px; border-top: 1px solid #F0F0EC; }
+.day-item.open .day-body { display: block; padding-top: 12px; }
+.day-body .expense-list { margin-bottom: 12px; }
+.day-body .expense-item { background: var(--page); }
+
+/* ============================================================
+   Ajustes — estadísticas y zona de peligro
+   ============================================================ */
+.stats { display: flex; flex-direction: column; gap: 0; }
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid #F0F0EC;
+  font-size: 15px;
+}
+.stat-label { color: var(--text-2); }
+.stat-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat-projection { margin: 14px 0 0; font-size: 14px; color: var(--text-2); line-height: 1.5; }
+
+.data-text { font-size: 14px; color: var(--text-2); margin: 0 0 12px; }
+.data-actions { display: flex; gap: 10px; }
+.data-actions .btn { flex: 1; }
+
+.danger-zone { border-color: var(--red-border); }
+.danger-text { font-size: 14px; color: var(--text-2); margin: 0 0 12px; }
+
+/* ============================================================
+   Bottom sheet (agregar gasto) + modal de confirmación
+   ============================================================ */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 24, 0.45);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.sheet-backdrop.open { opacity: 1; }
+.sheet-backdrop.center { align-items: center; padding: 24px; }
+
+.sheet {
+  width: 100%;
+  max-width: var(--maxw);
+  background: var(--surface);
+  border-radius: 16px 16px 0 0;
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  transform: translateY(100%);
+  transition: transform .3s ease-out;
+}
+.sheet-backdrop.open .sheet { transform: translateY(0); }
+.sheet-title { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+.sheet-actions { display: flex; gap: 10px; margin-top: 6px; }
+.sheet-actions .btn { flex: 1; }
+
+.confirm {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  padding: 22px 18px;
+  width: 100%;
+  max-width: 360px;
+  transform: scale(.96);
+  transition: transform .2s ease;
+}
+.sheet-backdrop.center.open .confirm { transform: scale(1); }
+.confirm-title { font-size: 18px; font-weight: 600; margin: 0 0 8px; }
+.confirm-text { font-size: 14px; color: var(--text-2); margin: 0 0 18px; line-height: 1.5; }
+.confirm-actions { display: flex; gap: 10px; }
+.confirm-actions .btn { flex: 1; }
